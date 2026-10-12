@@ -1,0 +1,399 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "contract_name": "rto_prediction_order_features",
+  "contract_version": "1.0.0",
+  "created_at_utc": "2026-10-12T04:45:00Z",
+  "description": "Formal feature contract and data schema for ProfitGuard AI RTO prediction models.",
+  "governance": {
+    "environment": "DEVELOPMENT_BENCHMARK",
+    "provenance": "SYNTHETIC_DEVELOPMENT_ONLY",
+    "authority": "NON_AUTHORITATIVE_SHADOW_MODE",
+    "enforcement_rule": "Missing mandatory features must return INSUFFICIENT_DATA or RULE_BASED_FALLBACK. Never silently invent values."
+  },
+  "prediction_timing": {
+    "evaluation_moment": "ORDER_PLACEMENT",
+    "historical_cutoff": "Strictly prior to order_timestamp (T_order - 1 microsecond)",
+    "future_fields_prohibited": [
+      "delivery_attempts",
+      "carrier_status",
+      "delivery_timestamp",
+      "rto_initiated_timestamp",
+      "delivery_agent_id",
+      "ndr_count",
+      "final_delivery_status"
+    ]
+  },
+  "canonical_feature_order": [
+    "is_cod",
+    "payment_type",
+    "order_value",
+    "log_order_value",
+    "item_line_count",
+    "total_quantity",
+    "unique_seller_count",
+    "unique_category_count",
+    "dominant_category",
+    "contains_fragile_product",
+    "contains_premium_product",
+    "total_product_weight_g",
+    "average_item_price",
+    "customer_tenure_days",
+    "is_first_order",
+    "customer_prior_order_count",
+    "seller_tenure_days",
+    "customer_region",
+    "customer_location_tier",
+    "customer_serviceability_score",
+    "is_event_period",
+    "event_category",
+    "event_impact_score",
+    "customer_orders_last_30d",
+    "customer_orders_last_90d",
+    "customer_days_since_last_order",
+    "customer_prior_cod_share",
+    "customer_prior_avg_order_value",
+    "current_vs_customer_avg_value_ratio",
+    "customer_history_available",
+    "seller_prior_order_count",
+    "seller_orders_last_30d",
+    "seller_avg_dispatch_hours_prior_30d",
+    "seller_dispatch_hours_std_prior_30d",
+    "seller_dispatch_history_count_30d",
+    "seller_history_available",
+    "dominant_category_orders_last_30d",
+    "dominant_category_orders_last_90d",
+    "category_demand_acceleration",
+    "category_avg_order_value_prior_30d",
+    "category_history_count_30d"
+  ],
+  "features": {
+    "is_cod": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if payment method is COD; 0 for prepaid gateways",
+      "fallback": "Strictly required; missing triggers INSUFFICIENT_DATA"
+    },
+    "payment_type": {
+      "type": "string",
+      "unit": "categorical",
+      "allowed_values": ["COD", "UPI", "Credit_Card", "Debit_Card", "Wallet"],
+      "nullable": false,
+      "description": "Payment instrument selected at checkout",
+      "fallback": "Strictly required; missing triggers INSUFFICIENT_DATA"
+    },
+    "order_value": {
+      "type": "float",
+      "unit": "INR",
+      "allowed_range": [1.0, 1000000.0],
+      "nullable": false,
+      "description": "Total gross merchandise value (GMV) of cart agreed at checkout",
+      "fallback": "Strictly required; missing triggers INSUFFICIENT_DATA"
+    },
+    "log_order_value": {
+      "type": "float",
+      "unit": "log_INR",
+      "allowed_range": [0.0, 15.0],
+      "nullable": false,
+      "description": "log1p(order_value)",
+      "fallback": "Calculated deterministically from order_value"
+    },
+    "item_line_count": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [1, 100],
+      "nullable": false,
+      "description": "Count of distinct item SKUs in order",
+      "fallback": "Default 1 if item lines not populated"
+    },
+    "total_quantity": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [1, 1000],
+      "nullable": false,
+      "description": "Total units ordered across all items in cart",
+      "fallback": "Default 1"
+    },
+    "unique_seller_count": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [1, 50],
+      "nullable": false,
+      "description": "Count of distinct fulfilling sellers in cart",
+      "fallback": "Default 1"
+    },
+    "unique_category_count": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [1, 20],
+      "nullable": false,
+      "description": "Count of distinct product categories in cart",
+      "fallback": "Default 1"
+    },
+    "dominant_category": {
+      "type": "string",
+      "unit": "categorical",
+      "allowed_values": ["Electronics", "Fashion", "Home_Kitchen", "Beauty", "Books", "Other"],
+      "nullable": false,
+      "description": "Product category representing largest value share",
+      "fallback": "Default 'Other' if unknown"
+    },
+    "contains_fragile_product": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if any product is flagged fragile in catalog",
+      "fallback": "Default 0"
+    },
+    "contains_premium_product": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if order contains premium catalog items",
+      "fallback": "Default 0 (or derived from order_value >= 2500)"
+    },
+    "total_product_weight_g": {
+      "type": "float",
+      "unit": "grams",
+      "allowed_range": [1.0, 50000.0],
+      "nullable": false,
+      "description": "Sum of catalog weights across items",
+      "fallback": "Default 500.0 * total_quantity"
+    },
+    "average_item_price": {
+      "type": "float",
+      "unit": "INR",
+      "allowed_range": [1.0, 500000.0],
+      "nullable": false,
+      "description": "order_value / total_quantity",
+      "fallback": "Derived from order_value"
+    },
+    "customer_tenure_days": {
+      "type": "integer",
+      "unit": "days",
+      "allowed_range": [0, 3650],
+      "nullable": false,
+      "description": "Days since customer account registration",
+      "fallback": "Default 0 for new signups"
+    },
+    "is_first_order": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if customer has 0 prior placed orders",
+      "fallback": "Derived from customer_prior_order_count == 0"
+    },
+    "customer_prior_order_count": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 10000],
+      "nullable": false,
+      "description": "Count of orders placed strictly before current order",
+      "fallback": "0 if new customer or no history available"
+    },
+    "seller_tenure_days": {
+      "type": "integer",
+      "unit": "days",
+      "allowed_range": [0, 3650],
+      "nullable": false,
+      "description": "Days since primary seller onboarding",
+      "fallback": "Default 180 (platform average)"
+    },
+    "customer_region": {
+      "type": "string",
+      "unit": "categorical",
+      "allowed_values": ["North", "South", "East", "West", "Central"],
+      "nullable": false,
+      "description": "Geographical region derived from destination pincode prefix",
+      "fallback": "Default 'West' if pincode unmapped"
+    },
+    "customer_location_tier": {
+      "type": "string",
+      "unit": "categorical",
+      "allowed_values": ["Metro", "Tier_2", "Tier_3_Rural"],
+      "nullable": false,
+      "description": "Urban/rural tier derived from pincode database",
+      "fallback": "Default 'Tier_2' if pincode unmapped"
+    },
+    "customer_serviceability_score": {
+      "type": "float",
+      "unit": "index_0_to_1",
+      "allowed_range": [0.0, 1.0],
+      "nullable": false,
+      "description": "Static logistics serviceability rating from pincode master",
+      "fallback": "Default 0.85"
+    },
+    "is_event_period": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if scheduled sale or festival event active on order date",
+      "fallback": "Default 0"
+    },
+    "event_category": {
+      "type": "string",
+      "unit": "categorical",
+      "allowed_values": ["Sale", "Festival", "Weather", "No_Event"],
+      "nullable": false,
+      "description": "Active calendar event category",
+      "fallback": "Default 'No_Event'"
+    },
+    "event_impact_score": {
+      "type": "float",
+      "unit": "score_0_to_3",
+      "allowed_range": [0.0, 3.0],
+      "nullable": false,
+      "description": "Severity index of active calendar event",
+      "fallback": "Default 0.0"
+    },
+    "customer_orders_last_30d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 1000],
+      "nullable": false,
+      "description": "Count of orders by customer in prior 30-day window",
+      "fallback": "0 if cold start"
+    },
+    "customer_orders_last_90d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 2000],
+      "nullable": false,
+      "description": "Count of orders by customer in prior 90-day window",
+      "fallback": "0 if cold start"
+    },
+    "customer_days_since_last_order": {
+      "type": "float",
+      "unit": "days",
+      "allowed_range": [0.0, 3650.0],
+      "nullable": true,
+      "description": "Days since previous order. Null for first-time orders",
+      "fallback": "Pipeline median imputation handles nulls safely"
+    },
+    "customer_prior_cod_share": {
+      "type": "float",
+      "unit": "ratio_0_to_1",
+      "allowed_range": [0.0, 1.0],
+      "nullable": true,
+      "description": "Share of prior orders placed with COD",
+      "fallback": "Hierarchical fallback (tier-category -> platform -> median imputation)"
+    },
+    "customer_prior_avg_order_value": {
+      "type": "float",
+      "unit": "INR",
+      "allowed_range": [1.0, 1000000.0],
+      "nullable": true,
+      "description": "Average GMV of customer strictly prior orders",
+      "fallback": "Hierarchical fallback (tier-category -> platform -> median imputation)"
+    },
+    "current_vs_customer_avg_value_ratio": {
+      "type": "float",
+      "unit": "ratio",
+      "allowed_range": [0.01, 100.0],
+      "nullable": false,
+      "description": "order_value / customer_prior_avg_order_value",
+      "fallback": "Default 1.0 for first-time orders"
+    },
+    "customer_history_available": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if customer has prior history; 0 for cold-start",
+      "fallback": "Derived from customer_prior_order_count > 0"
+    },
+    "seller_prior_order_count": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 1000000],
+      "nullable": false,
+      "description": "Total prior orders for primary seller before current order",
+      "fallback": "Default 50 (platform warmup)"
+    },
+    "seller_orders_last_30d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 500000],
+      "nullable": false,
+      "description": "Seller orders in prior 30-day window",
+      "fallback": "Default 15"
+    },
+    "seller_avg_dispatch_hours_prior_30d": {
+      "type": "float",
+      "unit": "hours",
+      "allowed_range": [0.0, 720.0],
+      "nullable": true,
+      "description": "Mean dispatch latency for observable prior seller shipments",
+      "fallback": "Pipeline median imputation"
+    },
+    "seller_dispatch_hours_std_prior_30d": {
+      "type": "float",
+      "unit": "hours",
+      "allowed_range": [0.0, 360.0],
+      "nullable": true,
+      "description": "Sample std dev of prior 30-day dispatch hours",
+      "fallback": "Pipeline median imputation"
+    },
+    "seller_dispatch_history_count_30d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 500000],
+      "nullable": false,
+      "description": "Observable prior dispatch events in 30 days",
+      "fallback": "Default 15"
+    },
+    "seller_history_available": {
+      "type": "integer",
+      "unit": "binary_flag",
+      "allowed_range": [0, 1],
+      "nullable": false,
+      "description": "1 if seller has prior history; 0 for cold start",
+      "fallback": "Default 1"
+    },
+    "dominant_category_orders_last_30d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 1000000],
+      "nullable": false,
+      "description": "Category platform orders in prior 30 days",
+      "fallback": "Default 100"
+    },
+    "dominant_category_orders_last_90d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 3000000],
+      "nullable": false,
+      "description": "Category platform orders in prior 90 days",
+      "fallback": "Default 300"
+    },
+    "category_demand_acceleration": {
+      "type": "float",
+      "unit": "ratio",
+      "allowed_range": [0.0, 20.0],
+      "nullable": true,
+      "description": "(cat_orders_30d / 30) / (cat_orders_90d / 90)",
+      "fallback": "Default 1.0"
+    },
+    "category_avg_order_value_prior_30d": {
+      "type": "float",
+      "unit": "INR",
+      "allowed_range": [1.0, 1000000.0],
+      "nullable": true,
+      "description": "Mean order value for category in prior 30 days",
+      "fallback": "Default order_value"
+    },
+    "category_history_count_30d": {
+      "type": "integer",
+      "unit": "count",
+      "allowed_range": [0, 1000000],
+      "nullable": false,
+      "description": "Category order support count in prior 30 days",
+      "fallback": "Default 100"
+    }
+  }
+}

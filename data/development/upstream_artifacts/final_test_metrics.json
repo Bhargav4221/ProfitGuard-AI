@@ -1,0 +1,12 @@
+{
+  "model_name": "Logistic Regression \u2014 full",
+  "training_rows": 239532,
+  "test_rows": 57056,
+  "feature_count": 41,
+  "fit_seconds": 1.8266399999847636,
+  "roc_auc": 0.6959403500613138,
+  "pr_auc": 0.32678843442119565,
+  "test_rto_rate": 0.18560712282669659,
+  "medium_risk_threshold": 0.21783658544157908,
+  "high_risk_threshold": 0.28257573739831754
+}

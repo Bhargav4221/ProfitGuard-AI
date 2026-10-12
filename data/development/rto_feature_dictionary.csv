@@ -1,0 +1,54 @@
+feature_name,feature_domain,dtype,null_count,model_input_or_audit,leakage_status,calculation,source_table,available_at_prediction,historical_window,fallback_rule
+order_id,Audit,object,0,Audit only,Audit only,,,False,,
+order_timestamp,Audit,datetime64[ns],0,Audit only,Audit only,,,False,,
+customer_id,Audit,object,0,Audit only,Audit only,,,False,,
+primary_seller_id,Audit,object,0,Audit only,Audit only,,,False,,
+customer_pincode,Audit,int64,0,Audit only,Audit only,,,False,,
+feature_as_of_timestamp,Audit,datetime64[ns],0,Audit only,Audit only,,,False,,
+data_period,Audit,string,296588,Audit only,Audit only,,,False,,
+target_rto,Target,int8,0,Target,Target only,1 when delivery_status is RTO; 0 when delivery_status is Delivered,logistics,False,,
+is_cod,Direct,int8,0,Model input,Safe,1 when payment_type is COD; otherwise 0,payments,True,,
+payment_type,Direct,object,0,Model input,Safe,,,True,,
+order_value,Direct,float64,0,Model input,Safe,Sum of quantity multiplied by item_price,order_items,True,,
+log_order_value,Direct,float64,0,Model input,Safe,log1p(order_value),order_items,True,,
+item_line_count,Direct,int64,0,Model input,Safe,,,True,,
+total_quantity,Direct,int64,0,Model input,Safe,,,True,,
+unique_seller_count,Direct,int64,0,Model input,Safe,,,True,,
+unique_category_count,Direct,int64,0,Model input,Safe,,,True,,
+dominant_category,Direct,object,0,Model input,Safe,,,True,,
+contains_fragile_product,Direct,int8,0,Model input,Safe,,,True,,
+contains_premium_product,Direct,int8,0,Model input,Safe,,,True,,
+total_product_weight_g,Direct,float64,0,Model input,Safe,,,True,,
+average_item_price,Direct,float64,0,Model input,Safe,,,True,,
+customer_tenure_days,Direct,int64,0,Model input,Safe,,,True,,
+is_first_order,Direct,int8,0,Model input,Safe,,,True,,
+customer_prior_order_count,Direct,int64,0,Model input,Safe,Count of strictly earlier customer orders,orders,True,Lifetime prior history,No fallback; zero indicates no prior orders
+seller_tenure_days,Direct,int64,0,Model input,Safe,,,True,,
+customer_region,Direct,object,0,Model input,Safe,,,True,,
+customer_location_tier,Direct,object,0,Model input,Safe,,,True,,
+customer_serviceability_score,Direct,float64,0,Model input,Safe,,,True,,
+is_event_period,Direct,int8,0,Model input,Safe,1 when an eligible event is active for the customer region,calendar_events + geography,True,,No eligible event becomes 0
+event_category,Direct,string,0,Model input,Safe,,,True,,
+event_impact_score,Direct,float64,0,Model input,Safe,,,True,,
+customer_orders_last_30d,Customer history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+customer_orders_last_90d,Customer history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+customer_days_since_last_order,Customer history,float64,49480,Model input,Safe,,,True,Strictly prior activity,
+customer_prior_cod_share,Customer history,float64,5,Model input,Safe,COD share across strictly earlier customer orders,orders + payments,True,Lifetime prior history,Customer → tier-category → tier → category → platform → cold start
+customer_prior_avg_order_value,Customer history,float64,5,Model input,Safe,Average order value across strictly earlier customer orders,orders + order_items,True,Lifetime prior history,Customer → tier-category → tier → category → platform → cold start
+current_vs_customer_avg_value_ratio,Customer history,float64,5,Model input,Safe,,,True,Strictly prior activity,
+customer_history_available,Customer history,int8,0,Model input,Safe,,,True,Strictly prior activity,
+seller_prior_order_count,Seller history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+seller_orders_last_30d,Seller history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+seller_avg_dispatch_hours_prior_30d,Seller history,float64,22,Model input,Safe,Average dispatch hours for observable earlier seller shipments,orders + logistics,True,Previous 30 days,Seller 30-day history → platform → cold start
+seller_dispatch_hours_std_prior_30d,Seller history,float64,22,Model input,Safe,Sample standard deviation of observable earlier seller dispatch hours,orders + logistics,True,Previous 30 days,Seller 30-day history → platform → cold start
+seller_dispatch_history_count_30d,Seller history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+seller_history_available,Seller history,int8,0,Model input,Safe,,,True,Strictly prior activity,
+dominant_category_orders_last_30d,Category history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+dominant_category_orders_last_90d,Category history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+category_demand_acceleration,Category history,float64,8,Model input,Safe,(category orders in prior 30 days / 30) divided by (category orders in prior 90 days / 90),orders + order_items + products,True,Previous 30 and 90 days,Undefined when prior 90-day count is zero
+category_avg_order_value_prior_30d,Category history,float64,4,Model input,Safe,Average value of strictly earlier dominant-category orders,orders + order_items + products,True,Previous 30 days,Category 30-day → category lifetime → platform → cold start
+category_history_count_30d,Category history,int64,0,Model input,Safe,,,True,Strictly prior activity,
+customer_value_fallback_level,Fallback metadata,object,0,Metadata,Safe,,,True,,Feature-specific time-aware hierarchy
+customer_cod_fallback_level,Fallback metadata,object,0,Metadata,Safe,,,True,,Feature-specific time-aware hierarchy
+category_value_fallback_level,Fallback metadata,object,0,Metadata,Safe,,,True,,Feature-specific time-aware hierarchy
+seller_dispatch_fallback_level,Fallback metadata,object,0,Metadata,Safe,,,True,,Feature-specific time-aware hierarchy

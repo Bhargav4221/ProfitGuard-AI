@@ -1,0 +1,266 @@
+{
+  "report_title": "ProfitGuard AI \u2014 Phase 3 / 3.1: Reconciled Economic Simulation Report",
+  "governance_label": "SYNTHETIC DEVELOPMENT RESULTS \u2014 NOT EVALUATED ON REAL PRODUCTION DATA",
+  "dataset_metadata": {
+    "test_sample_orders": 200,
+    "total_gmv_inr": 810509.51,
+    "actual_delivered_orders": 163,
+    "actual_rto_orders": 37,
+    "test_rto_prevalence_pct": 18.5,
+    "unmitigated_rto_loss_inr": 7754.81,
+    "unmitigated_net_contribution_inr": 438625.48
+  },
+  "reconciliation_analysis": {
+    "root_cause_explanation": "Threshold tau = 0.18 evaluates two distinct models across reports: (1) The serialized serving package (rto_model_v1.joblib, Logistic Regression trained on 1,000 rows) flags 84 orders (29 TP, 55 FP) with break-even eta = 19.76%. (2) The chronological holdout model (Random Forest trained strictly on 600 train orders, evaluated in SYNTHETIC_ML_EVALUATION.json) flags 100 orders (26 TP, 74 FP) with break-even eta = 31.73%. Both calculations are mathematically verified and independently reproducible.",
+    "artifact_model_type": "LogisticRegression",
+    "artifact_model_version": "v1.0.0-synthetic-dev",
+    "artifact_threshold_evaluated": 0.18,
+    "holdout_benchmark_model_type": "RandomForestClassifier",
+    "holdout_benchmark_threshold_evaluated": 0.18
+  },
+  "operating_threshold_evaluated": {
+    "threshold": 0.18,
+    "selection_basis": "Cross-model evaluated operating threshold (tau = 0.18)",
+    "flagged_orders": 84,
+    "flagged_share_pct": 42.0,
+    "true_positives_captured": 29,
+    "false_positives_flagged": 55,
+    "missed_rtos_fn": 8,
+    "true_negatives_tn": 108,
+    "recall_pct": 78.38,
+    "precision_pct": 34.52
+  },
+  "policy_comparison": {
+    "Policy_1_Deterministic_Rules": {
+      "description": "Existing production decision engine rules (deterministic heuristics).",
+      "flagged_orders": 43,
+      "intervention_cost_inr": 21.5,
+      "prevented_loss_inr": 185.09,
+      "net_contribution_inr": 438789.07,
+      "lift_vs_unmitigated_inr": 163.59
+    },
+    "Policy_2_Shadow_ML": {
+      "description": "ML risk scoring in shadow mode only (zero execution authority).",
+      "flagged_orders": 0,
+      "intervention_cost_inr": 0.0,
+      "prevented_loss_inr": 0.0,
+      "net_contribution_inr": 438625.48,
+      "lift_vs_unmitigated_inr": 0.0,
+      "observability_value": "Captures risk distributions and drift metrics with zero customer friction."
+    },
+    "Policy_3_Hypothetical_Risk_Aware_ML": {
+      "description": "Hypothetical policy triggering pre-dispatch OTP on orders with P(RTO) >= 0.18.",
+      "intervention_type": "Automated OTP Verification (\u20b90.50/order)",
+      "break_even_effectiveness_eta": 0.1976,
+      "break_even_effectiveness_pct": 19.76,
+      "sensitivity_scenarios": {
+        "eta_0pct": {
+          "assumed_effectiveness_eta": 0.0,
+          "prevented_rto_count": 0.0,
+          "prevented_loss_inr": 0.0,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -1135.32,
+          "simulated_net_contribution_inr": 437490.15
+        },
+        "eta_5pct": {
+          "assumed_effectiveness_eta": 0.05,
+          "prevented_rto_count": 1.45,
+          "prevented_loss_inr": 287.22,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -848.1,
+          "simulated_net_contribution_inr": 437777.38
+        },
+        "eta_10pct": {
+          "assumed_effectiveness_eta": 0.1,
+          "prevented_rto_count": 2.9,
+          "prevented_loss_inr": 574.45,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -560.87,
+          "simulated_net_contribution_inr": 438064.6
+        },
+        "eta_15pct": {
+          "assumed_effectiveness_eta": 0.15,
+          "prevented_rto_count": 4.35,
+          "prevented_loss_inr": 861.67,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -273.65,
+          "simulated_net_contribution_inr": 438351.83
+        },
+        "eta_20pct": {
+          "assumed_effectiveness_eta": 0.2,
+          "prevented_rto_count": 5.8,
+          "prevented_loss_inr": 1148.9,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": 13.58,
+          "simulated_net_contribution_inr": 438639.05
+        },
+        "eta_25pct": {
+          "assumed_effectiveness_eta": 0.25,
+          "prevented_rto_count": 7.25,
+          "prevented_loss_inr": 1436.12,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": 300.8,
+          "simulated_net_contribution_inr": 438926.28
+        }
+      }
+    },
+    "Policy_3A_Serving_Artifact_Package": {
+      "policy_name": "Policy_3A_Serving_Artifact_Package",
+      "description": "Deployed shadow serving package (Logistic Regression fit on 1,000 rows, tau=0.18)",
+      "flagged_orders": 84,
+      "flagged_share_pct": 42.0,
+      "true_positives_captured": 29,
+      "false_positives_flagged": 55,
+      "missed_rtos_fn": 8,
+      "true_negatives_tn": 108,
+      "recall_pct": 78.38,
+      "precision_pct": 34.52,
+      "intervention_cost_inr": 42.0,
+      "fp_friction_cost_inr": 1093.32,
+      "tp_rto_loss_pool_inr": 5744.48,
+      "break_even_effectiveness_eta": 0.1976,
+      "break_even_effectiveness_pct": 19.76,
+      "sensitivity_scenarios": {
+        "eta_0pct": {
+          "assumed_effectiveness_eta": 0.0,
+          "prevented_rto_count": 0.0,
+          "prevented_loss_inr": 0.0,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -1135.32,
+          "simulated_net_contribution_inr": 437490.15
+        },
+        "eta_5pct": {
+          "assumed_effectiveness_eta": 0.05,
+          "prevented_rto_count": 1.45,
+          "prevented_loss_inr": 287.22,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -848.1,
+          "simulated_net_contribution_inr": 437777.38
+        },
+        "eta_10pct": {
+          "assumed_effectiveness_eta": 0.1,
+          "prevented_rto_count": 2.9,
+          "prevented_loss_inr": 574.45,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -560.87,
+          "simulated_net_contribution_inr": 438064.6
+        },
+        "eta_15pct": {
+          "assumed_effectiveness_eta": 0.15,
+          "prevented_rto_count": 4.35,
+          "prevented_loss_inr": 861.67,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": -273.65,
+          "simulated_net_contribution_inr": 438351.83
+        },
+        "eta_20pct": {
+          "assumed_effectiveness_eta": 0.2,
+          "prevented_rto_count": 5.8,
+          "prevented_loss_inr": 1148.9,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": 13.58,
+          "simulated_net_contribution_inr": 438639.05
+        },
+        "eta_25pct": {
+          "assumed_effectiveness_eta": 0.25,
+          "prevented_rto_count": 7.25,
+          "prevented_loss_inr": 1436.12,
+          "intervention_cost_inr": 42.0,
+          "fp_friction_cost_inr": 1093.32,
+          "net_expected_lift_inr": 300.8,
+          "simulated_net_contribution_inr": 438926.28
+        }
+      }
+    },
+    "Policy_3B_Chronological_Holdout_Random_Forest": {
+      "policy_name": "Policy_3B_Chronological_Holdout_Random_Forest",
+      "description": "Strict chronological holdout benchmark (Random Forest fit strictly on Train 600 rows, tau*=0.18)",
+      "flagged_orders": 100,
+      "flagged_share_pct": 50.0,
+      "true_positives_captured": 26,
+      "false_positives_flagged": 74,
+      "missed_rtos_fn": 11,
+      "true_negatives_tn": 89,
+      "recall_pct": 70.27,
+      "precision_pct": 26.0,
+      "intervention_cost_inr": 50.0,
+      "fp_friction_cost_inr": 1520.51,
+      "tp_rto_loss_pool_inr": 4949.33,
+      "break_even_effectiveness_eta": 0.3173,
+      "break_even_effectiveness_pct": 31.73,
+      "sensitivity_scenarios": {
+        "eta_0pct": {
+          "assumed_effectiveness_eta": 0.0,
+          "prevented_rto_count": 0.0,
+          "prevented_loss_inr": 0.0,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -1570.51,
+          "simulated_net_contribution_inr": 437054.97
+        },
+        "eta_5pct": {
+          "assumed_effectiveness_eta": 0.05,
+          "prevented_rto_count": 1.3,
+          "prevented_loss_inr": 247.47,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -1323.04,
+          "simulated_net_contribution_inr": 437302.44
+        },
+        "eta_10pct": {
+          "assumed_effectiveness_eta": 0.1,
+          "prevented_rto_count": 2.6,
+          "prevented_loss_inr": 494.93,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -1075.57,
+          "simulated_net_contribution_inr": 437549.9
+        },
+        "eta_15pct": {
+          "assumed_effectiveness_eta": 0.15,
+          "prevented_rto_count": 3.9,
+          "prevented_loss_inr": 742.4,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -828.11,
+          "simulated_net_contribution_inr": 437797.37
+        },
+        "eta_20pct": {
+          "assumed_effectiveness_eta": 0.2,
+          "prevented_rto_count": 5.2,
+          "prevented_loss_inr": 989.87,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -580.64,
+          "simulated_net_contribution_inr": 438044.84
+        },
+        "eta_25pct": {
+          "assumed_effectiveness_eta": 0.25,
+          "prevented_rto_count": 6.5,
+          "prevented_loss_inr": 1237.33,
+          "intervention_cost_inr": 50.0,
+          "fp_friction_cost_inr": 1520.51,
+          "net_expected_lift_inr": -333.17,
+          "simulated_net_contribution_inr": 438292.3
+        }
+      }
+    }
+  },
+  "trade_off_analysis": {
+    "missed_rto_cost": "For Policy 3A (Serving Artifact, FN = 8), total unmitigated FN loss is \u20b92010.33. For Policy 3B (Holdout RF, FN = 11), total unmitigated FN loss is \u20b92805.48.",
+    "false_positive_cost": "For Policy 3A (FP = 55), total FP overhead (OTP + 1% dropoff) is \u20b91120.82. For Policy 3B (FP = 74), total FP overhead is \u20b91557.51.",
+    "strategic_summary": "At tau = 0.18, the serving artifact intercepts 78.38% of RTOs with 19.76% break-even effectiveness. The chronological holdout Random Forest intercepts 70.27% of RTOs with 31.73% break-even effectiveness. Because intervention friction (1% checkout drop-off) accumulates with false positives, cleaner classification materially reduces break-even hurdles."
+  },
+  "disclaimer": "CAUSAL & SYNTHETIC LIMITATION: These figures represent an offline mathematical simulation based on synthetic marketplace data and stated economics. Intervention effectiveness (eta) cannot be measured without a randomized controlled A/B test on real merchant orders. Do NOT enable live automated interventions based on these numbers."
+}

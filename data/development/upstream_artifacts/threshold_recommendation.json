@@ -1,0 +1,12 @@
+{
+  "model_name": "Logistic Regression \u2014 full",
+  "feature_set": "Direct plus historical features",
+  "medium_risk_threshold": 0.21783658544157908,
+  "high_risk_threshold": 0.28257573739831754,
+  "risk_actions": {
+    "Low": "No additional intervention",
+    "Medium": "Address or order verification",
+    "High": "Enhanced verification, manual review, or conditional COD restriction"
+  },
+  "selection_basis": "Thresholds derived from validation-period probability quantiles before test evaluation."
+}

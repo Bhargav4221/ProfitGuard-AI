@@ -1,0 +1,1593 @@
+{
+  "label": "SYNTHETIC DEVELOPMENT RESULTS - NOT EVALUATED ON REAL PRODUCTION DATA",
+  "audit_phase": "Phase 2 - Independent ML Audit & Verification",
+  "timestamp_utc": "2026-10-12T10:26:45.924038+00:00",
+  "environment": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "scikit_learn": "1.7.2",
+    "pandas": "2.3.3",
+    "numpy": "2.2.6",
+    "joblib": "1.5.3"
+  },
+  "dataset_metadata": {
+    "path": "data\\development\\rto_feature_table_sample.csv",
+    "sha256": "d00b1c78d876c17322c7c412d8804f0ed979fde95f9b28e5231fefa4ae336b2a",
+    "total_rows": 1000,
+    "columns": 54,
+    "total_rtos": 206,
+    "rto_prevalence_pct": 20.6
+  },
+  "chronological_split": {
+    "train_set": {
+      "rows": 600,
+      "rto_count": 128,
+      "rto_rate": 0.2133,
+      "start": "2023-01-01 05:03:04",
+      "end": "2023-01-11 15:39:24"
+    },
+    "validation_set": {
+      "rows": 200,
+      "rto_count": 41,
+      "rto_rate": 0.205,
+      "start": "2023-01-11 16:00:56",
+      "end": "2023-01-13 07:11:49"
+    },
+    "test_set": {
+      "rows": 200,
+      "rto_count": 37,
+      "rto_rate": 0.185,
+      "start": "2023-01-13 07:50:17",
+      "end": "2023-01-14 19:00:02"
+    }
+  },
+  "random_forest_f1_investigation": {
+    "observed_f1_at_0_50": 0.0889,
+    "root_cause": "For imbalanced data (18.5% prevalence), uncalibrated ensemble probabilities rarely exceed the default 0.50 cutoff. Out of 200 test orders, only 8 (4%) exceeded 0.50, of which only 2 were true positives. When evaluated with validation-tuned threshold (tau* = 0.18), test Recall increases to 70.27% and F1 to 0.3796.",
+    "probability_distribution_test_set": {
+      "min": 0.0146,
+      "max": 0.6137,
+      "mean": 0.2153,
+      "median": 0.1807,
+      "count_above_0_50": 8,
+      "count_above_0_30": 47,
+      "count_above_0_20": 87
+    }
+  },
+  "models_evaluated": {
+    "Majority Class Baseline": {
+      "default_threshold_eval": {
+        "evaluation_threshold": 0.5,
+        "threshold_selection_basis": "Default standard classification threshold (0.50)",
+        "predicted_positive_count": 0,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            163,
+            0
+          ],
+          [
+            37,
+            0
+          ]
+        ],
+        "accuracy": 0.815,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": 0.5,
+        "pr_auc": 0.185,
+        "brier_score": 0.185
+      },
+      "validation_tuned_threshold_eval": {
+        "evaluation_threshold": 0.1,
+        "threshold_selection_basis": "Validation-tuned threshold optimizing F1 (Val F1=0.0)",
+        "predicted_positive_count": 0,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            163,
+            0
+          ],
+          [
+            37,
+            0
+          ]
+        ],
+        "accuracy": 0.815,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": 0.5,
+        "pr_auc": 0.185,
+        "brier_score": 0.185
+      },
+      "validation_optimal_threshold": 0.1,
+      "validation_optimal_f1": 0.0,
+      "operating_points_sweep": [
+        {
+          "evaluation_threshold": 0.05,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.05",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.1,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.1",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.15,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.15",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.18,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.18",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2178,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2178",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.25,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.25",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2826,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2826",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.3,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.3",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.4,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.4",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.5,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.5",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.5,
+          "pr_auc": 0.185,
+          "brier_score": 0.185,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        }
+      ],
+      "precision_recall_curve_samples": [
+        {
+          "threshold": 0.0,
+          "precision": 0.185,
+          "recall": 1.0
+        }
+      ]
+    },
+    "COD-Only Baseline": {
+      "default_threshold_eval": {
+        "evaluation_threshold": 0.5,
+        "threshold_selection_basis": "Default standard classification threshold (0.50)",
+        "predicted_positive_count": 0,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            163,
+            0
+          ],
+          [
+            37,
+            0
+          ]
+        ],
+        "accuracy": 0.815,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": 0.6163,
+        "pr_auc": 0.2365,
+        "brier_score": 0.1474
+      },
+      "validation_tuned_threshold_eval": {
+        "evaluation_threshold": 0.1,
+        "threshold_selection_basis": "Validation-tuned threshold optimizing F1 (Val F1=0.406)",
+        "predicted_positive_count": 81,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            104,
+            59
+          ],
+          [
+            15,
+            22
+          ]
+        ],
+        "accuracy": 0.63,
+        "precision": 0.2716,
+        "recall": 0.5946,
+        "f1_score": 0.3729,
+        "roc_auc": 0.6163,
+        "pr_auc": 0.2365,
+        "brier_score": 0.1474
+      },
+      "validation_optimal_threshold": 0.1,
+      "validation_optimal_f1": 0.406,
+      "operating_points_sweep": [
+        {
+          "evaluation_threshold": 0.05,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.05",
+          "predicted_positive_count": 200,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              0,
+              163
+            ],
+            [
+              0,
+              37
+            ]
+          ],
+          "accuracy": 0.185,
+          "precision": 0.185,
+          "recall": 1.0,
+          "f1_score": 0.3122,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 0,
+          "false_positive_flags_fp": 163,
+          "trade_off_summary": "Catches 37/37 RTOs (100.0%), flags 163 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.1,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.1",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.15,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.15",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.18,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.18",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2178,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2178",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.25,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.25",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2826,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2826",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.3,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.3",
+          "predicted_positive_count": 81,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              104,
+              59
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.63,
+          "precision": 0.2716,
+          "recall": 0.5946,
+          "f1_score": 0.3729,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 59,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 59 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.4,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.4",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.5,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.5",
+          "predicted_positive_count": 0,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              163,
+              0
+            ],
+            [
+              37,
+              0
+            ]
+          ],
+          "accuracy": 0.815,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "roc_auc": 0.6163,
+          "pr_auc": 0.2365,
+          "brier_score": 0.1474,
+          "missed_rtos_fn": 37,
+          "false_positive_flags_fp": 0,
+          "trade_off_summary": "Catches 0/37 RTOs (0.0%), flags 0 clean orders as false positives."
+        }
+      ],
+      "precision_recall_curve_samples": [
+        {
+          "threshold": 0.0946,
+          "precision": 0.185,
+          "recall": 1.0
+        },
+        {
+          "threshold": 0.3252,
+          "precision": 0.2716,
+          "recall": 0.5946
+        }
+      ]
+    },
+    "Logistic Regression (Full)": {
+      "default_threshold_eval": {
+        "evaluation_threshold": 0.5,
+        "threshold_selection_basis": "Default standard classification threshold (0.50)",
+        "predicted_positive_count": 12,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            156,
+            7
+          ],
+          [
+            32,
+            5
+          ]
+        ],
+        "accuracy": 0.805,
+        "precision": 0.4167,
+        "recall": 0.1351,
+        "f1_score": 0.2041,
+        "roc_auc": 0.6347,
+        "pr_auc": 0.3311,
+        "brier_score": 0.1558
+      },
+      "validation_tuned_threshold_eval": {
+        "evaluation_threshold": 0.1,
+        "threshold_selection_basis": "Validation-tuned threshold optimizing F1 (Val F1=0.3851)",
+        "predicted_positive_count": 111,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            79,
+            84
+          ],
+          [
+            10,
+            27
+          ]
+        ],
+        "accuracy": 0.53,
+        "precision": 0.2432,
+        "recall": 0.7297,
+        "f1_score": 0.3649,
+        "roc_auc": 0.6347,
+        "pr_auc": 0.3311,
+        "brier_score": 0.1558
+      },
+      "validation_optimal_threshold": 0.1,
+      "validation_optimal_f1": 0.3851,
+      "operating_points_sweep": [
+        {
+          "evaluation_threshold": 0.05,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.05",
+          "predicted_positive_count": 146,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              49,
+              114
+            ],
+            [
+              5,
+              32
+            ]
+          ],
+          "accuracy": 0.405,
+          "precision": 0.2192,
+          "recall": 0.8649,
+          "f1_score": 0.3497,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 5,
+          "false_positive_flags_fp": 114,
+          "trade_off_summary": "Catches 32/37 RTOs (86.5%), flags 114 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.1,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.1",
+          "predicted_positive_count": 111,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              79,
+              84
+            ],
+            [
+              10,
+              27
+            ]
+          ],
+          "accuracy": 0.53,
+          "precision": 0.2432,
+          "recall": 0.7297,
+          "f1_score": 0.3649,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 10,
+          "false_positive_flags_fp": 84,
+          "trade_off_summary": "Catches 27/37 RTOs (73.0%), flags 84 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.15,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.15",
+          "predicted_positive_count": 84,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              99,
+              64
+            ],
+            [
+              17,
+              20
+            ]
+          ],
+          "accuracy": 0.595,
+          "precision": 0.2381,
+          "recall": 0.5405,
+          "f1_score": 0.3306,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 17,
+          "false_positive_flags_fp": 64,
+          "trade_off_summary": "Catches 20/37 RTOs (54.0%), flags 64 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.18,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.18",
+          "predicted_positive_count": 72,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              110,
+              53
+            ],
+            [
+              18,
+              19
+            ]
+          ],
+          "accuracy": 0.645,
+          "precision": 0.2639,
+          "recall": 0.5135,
+          "f1_score": 0.3486,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 18,
+          "false_positive_flags_fp": 53,
+          "trade_off_summary": "Catches 19/37 RTOs (51.3%), flags 53 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2",
+          "predicted_positive_count": 64,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              116,
+              47
+            ],
+            [
+              20,
+              17
+            ]
+          ],
+          "accuracy": 0.665,
+          "precision": 0.2656,
+          "recall": 0.4595,
+          "f1_score": 0.3366,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 20,
+          "false_positive_flags_fp": 47,
+          "trade_off_summary": "Catches 17/37 RTOs (46.0%), flags 47 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2178,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2178",
+          "predicted_positive_count": 55,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              122,
+              41
+            ],
+            [
+              23,
+              14
+            ]
+          ],
+          "accuracy": 0.68,
+          "precision": 0.2545,
+          "recall": 0.3784,
+          "f1_score": 0.3043,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 23,
+          "false_positive_flags_fp": 41,
+          "trade_off_summary": "Catches 14/37 RTOs (37.8%), flags 41 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.25,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.25",
+          "predicted_positive_count": 47,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              126,
+              37
+            ],
+            [
+              27,
+              10
+            ]
+          ],
+          "accuracy": 0.68,
+          "precision": 0.2128,
+          "recall": 0.2703,
+          "f1_score": 0.2381,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 27,
+          "false_positive_flags_fp": 37,
+          "trade_off_summary": "Catches 10/37 RTOs (27.0%), flags 37 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2826,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2826",
+          "predicted_positive_count": 42,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              131,
+              32
+            ],
+            [
+              27,
+              10
+            ]
+          ],
+          "accuracy": 0.705,
+          "precision": 0.2381,
+          "recall": 0.2703,
+          "f1_score": 0.2532,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 27,
+          "false_positive_flags_fp": 32,
+          "trade_off_summary": "Catches 10/37 RTOs (27.0%), flags 32 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.3,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.3",
+          "predicted_positive_count": 37,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              135,
+              28
+            ],
+            [
+              28,
+              9
+            ]
+          ],
+          "accuracy": 0.72,
+          "precision": 0.2432,
+          "recall": 0.2432,
+          "f1_score": 0.2432,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 28,
+          "false_positive_flags_fp": 28,
+          "trade_off_summary": "Catches 9/37 RTOs (24.3%), flags 28 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.4,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.4",
+          "predicted_positive_count": 22,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              148,
+              15
+            ],
+            [
+              30,
+              7
+            ]
+          ],
+          "accuracy": 0.775,
+          "precision": 0.3182,
+          "recall": 0.1892,
+          "f1_score": 0.2373,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 30,
+          "false_positive_flags_fp": 15,
+          "trade_off_summary": "Catches 7/37 RTOs (18.9%), flags 15 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.5,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.5",
+          "predicted_positive_count": 12,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              156,
+              7
+            ],
+            [
+              32,
+              5
+            ]
+          ],
+          "accuracy": 0.805,
+          "precision": 0.4167,
+          "recall": 0.1351,
+          "f1_score": 0.2041,
+          "roc_auc": 0.6347,
+          "pr_auc": 0.3311,
+          "brier_score": 0.1558,
+          "missed_rtos_fn": 32,
+          "false_positive_flags_fp": 7,
+          "trade_off_summary": "Catches 5/37 RTOs (13.5%), flags 7 clean orders as false positives."
+        }
+      ],
+      "precision_recall_curve_samples": [
+        {
+          "threshold": 0.0061,
+          "precision": 0.185,
+          "recall": 1.0
+        },
+        {
+          "threshold": 0.0216,
+          "precision": 0.1925,
+          "recall": 0.973
+        },
+        {
+          "threshold": 0.031,
+          "precision": 0.2069,
+          "recall": 0.973
+        },
+        {
+          "threshold": 0.0424,
+          "precision": 0.2112,
+          "recall": 0.9189
+        },
+        {
+          "threshold": 0.0492,
+          "precision": 0.223,
+          "recall": 0.8919
+        },
+        {
+          "threshold": 0.0618,
+          "precision": 0.2296,
+          "recall": 0.8378
+        },
+        {
+          "threshold": 0.082,
+          "precision": 0.2377,
+          "recall": 0.7838
+        },
+        {
+          "threshold": 0.1053,
+          "precision": 0.2385,
+          "recall": 0.7027
+        },
+        {
+          "threshold": 0.1214,
+          "precision": 0.2396,
+          "recall": 0.6216
+        },
+        {
+          "threshold": 0.1525,
+          "precision": 0.241,
+          "recall": 0.5405
+        },
+        {
+          "threshold": 0.1821,
+          "precision": 0.2714,
+          "recall": 0.5135
+        },
+        {
+          "threshold": 0.2155,
+          "precision": 0.2632,
+          "recall": 0.4054
+        },
+        {
+          "threshold": 0.2754,
+          "precision": 0.2273,
+          "recall": 0.2703
+        },
+        {
+          "threshold": 0.3225,
+          "precision": 0.2581,
+          "recall": 0.2162
+        },
+        {
+          "threshold": 0.4574,
+          "precision": 0.3889,
+          "recall": 0.1892
+        },
+        {
+          "threshold": 0.7549,
+          "precision": 0.6,
+          "recall": 0.0811
+        }
+      ]
+    },
+    "Random Forest (Full)": {
+      "default_threshold_eval": {
+        "evaluation_threshold": 0.5,
+        "threshold_selection_basis": "Default standard classification threshold (0.50)",
+        "predicted_positive_count": 8,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            157,
+            6
+          ],
+          [
+            35,
+            2
+          ]
+        ],
+        "accuracy": 0.795,
+        "precision": 0.25,
+        "recall": 0.0541,
+        "f1_score": 0.0889,
+        "roc_auc": 0.6491,
+        "pr_auc": 0.2835,
+        "brier_score": 0.1496
+      },
+      "validation_tuned_threshold_eval": {
+        "evaluation_threshold": 0.18,
+        "threshold_selection_basis": "Validation-tuned threshold optimizing F1 (Val F1=0.4189)",
+        "predicted_positive_count": 100,
+        "test_set_positive_count": 37,
+        "confusion_matrix": [
+          [
+            89,
+            74
+          ],
+          [
+            11,
+            26
+          ]
+        ],
+        "accuracy": 0.575,
+        "precision": 0.26,
+        "recall": 0.7027,
+        "f1_score": 0.3796,
+        "roc_auc": 0.6491,
+        "pr_auc": 0.2835,
+        "brier_score": 0.1496
+      },
+      "validation_optimal_threshold": 0.18,
+      "validation_optimal_f1": 0.4189,
+      "operating_points_sweep": [
+        {
+          "evaluation_threshold": 0.05,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.05",
+          "predicted_positive_count": 192,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              7,
+              156
+            ],
+            [
+              1,
+              36
+            ]
+          ],
+          "accuracy": 0.215,
+          "precision": 0.1875,
+          "recall": 0.973,
+          "f1_score": 0.3144,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 1,
+          "false_positive_flags_fp": 156,
+          "trade_off_summary": "Catches 36/37 RTOs (97.3%), flags 156 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.1,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.1",
+          "predicted_positive_count": 167,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              30,
+              133
+            ],
+            [
+              3,
+              34
+            ]
+          ],
+          "accuracy": 0.32,
+          "precision": 0.2036,
+          "recall": 0.9189,
+          "f1_score": 0.3333,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 3,
+          "false_positive_flags_fp": 133,
+          "trade_off_summary": "Catches 34/37 RTOs (91.9%), flags 133 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.15,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.15",
+          "predicted_positive_count": 120,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              71,
+              92
+            ],
+            [
+              9,
+              28
+            ]
+          ],
+          "accuracy": 0.495,
+          "precision": 0.2333,
+          "recall": 0.7568,
+          "f1_score": 0.3567,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 9,
+          "false_positive_flags_fp": 92,
+          "trade_off_summary": "Catches 28/37 RTOs (75.7%), flags 92 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.18,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.18",
+          "predicted_positive_count": 100,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              89,
+              74
+            ],
+            [
+              11,
+              26
+            ]
+          ],
+          "accuracy": 0.575,
+          "precision": 0.26,
+          "recall": 0.7027,
+          "f1_score": 0.3796,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 11,
+          "false_positive_flags_fp": 74,
+          "trade_off_summary": "Catches 26/37 RTOs (70.3%), flags 74 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2",
+          "predicted_positive_count": 87,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              100,
+              63
+            ],
+            [
+              13,
+              24
+            ]
+          ],
+          "accuracy": 0.62,
+          "precision": 0.2759,
+          "recall": 0.6486,
+          "f1_score": 0.3871,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 13,
+          "false_positive_flags_fp": 63,
+          "trade_off_summary": "Catches 24/37 RTOs (64.9%), flags 63 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2178,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2178",
+          "predicted_positive_count": 77,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              108,
+              55
+            ],
+            [
+              15,
+              22
+            ]
+          ],
+          "accuracy": 0.65,
+          "precision": 0.2857,
+          "recall": 0.5946,
+          "f1_score": 0.386,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 15,
+          "false_positive_flags_fp": 55,
+          "trade_off_summary": "Catches 22/37 RTOs (59.5%), flags 55 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.25,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.25",
+          "predicted_positive_count": 68,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              115,
+              48
+            ],
+            [
+              17,
+              20
+            ]
+          ],
+          "accuracy": 0.675,
+          "precision": 0.2941,
+          "recall": 0.5405,
+          "f1_score": 0.381,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 17,
+          "false_positive_flags_fp": 48,
+          "trade_off_summary": "Catches 20/37 RTOs (54.0%), flags 48 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.2826,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.2826",
+          "predicted_positive_count": 55,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              124,
+              39
+            ],
+            [
+              21,
+              16
+            ]
+          ],
+          "accuracy": 0.7,
+          "precision": 0.2909,
+          "recall": 0.4324,
+          "f1_score": 0.3478,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 21,
+          "false_positive_flags_fp": 39,
+          "trade_off_summary": "Catches 16/37 RTOs (43.2%), flags 39 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.3,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.3",
+          "predicted_positive_count": 47,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              131,
+              32
+            ],
+            [
+              22,
+              15
+            ]
+          ],
+          "accuracy": 0.73,
+          "precision": 0.3191,
+          "recall": 0.4054,
+          "f1_score": 0.3571,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 22,
+          "false_positive_flags_fp": 32,
+          "trade_off_summary": "Catches 15/37 RTOs (40.5%), flags 32 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.4,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.4",
+          "predicted_positive_count": 21,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              148,
+              15
+            ],
+            [
+              31,
+              6
+            ]
+          ],
+          "accuracy": 0.77,
+          "precision": 0.2857,
+          "recall": 0.1622,
+          "f1_score": 0.2069,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 31,
+          "false_positive_flags_fp": 15,
+          "trade_off_summary": "Catches 6/37 RTOs (16.2%), flags 15 clean orders as false positives."
+        },
+        {
+          "evaluation_threshold": 0.5,
+          "threshold_selection_basis": "Fixed operating threshold tau=0.5",
+          "predicted_positive_count": 8,
+          "test_set_positive_count": 37,
+          "confusion_matrix": [
+            [
+              157,
+              6
+            ],
+            [
+              35,
+              2
+            ]
+          ],
+          "accuracy": 0.795,
+          "precision": 0.25,
+          "recall": 0.0541,
+          "f1_score": 0.0889,
+          "roc_auc": 0.6491,
+          "pr_auc": 0.2835,
+          "brier_score": 0.1496,
+          "missed_rtos_fn": 35,
+          "false_positive_flags_fp": 6,
+          "trade_off_summary": "Catches 2/37 RTOs (5.4%), flags 6 clean orders as false positives."
+        }
+      ],
+      "precision_recall_curve_samples": [
+        {
+          "threshold": 0.0146,
+          "precision": 0.185,
+          "recall": 1.0
+        },
+        {
+          "threshold": 0.0703,
+          "precision": 0.1872,
+          "recall": 0.9459
+        },
+        {
+          "threshold": 0.0913,
+          "precision": 0.2011,
+          "recall": 0.9459
+        },
+        {
+          "threshold": 0.1093,
+          "precision": 0.205,
+          "recall": 0.8919
+        },
+        {
+          "threshold": 0.1166,
+          "precision": 0.2162,
+          "recall": 0.8649
+        },
+        {
+          "threshold": 0.1278,
+          "precision": 0.2296,
+          "recall": 0.8378
+        },
+        {
+          "threshold": 0.1447,
+          "precision": 0.2295,
+          "recall": 0.7568
+        },
+        {
+          "threshold": 0.1662,
+          "precision": 0.2385,
+          "recall": 0.7027
+        },
+        {
+          "threshold": 0.1894,
+          "precision": 0.2604,
+          "recall": 0.6757
+        },
+        {
+          "threshold": 0.2068,
+          "precision": 0.2771,
+          "recall": 0.6216
+        },
+        {
+          "threshold": 0.2408,
+          "precision": 0.2857,
+          "recall": 0.5405
+        },
+        {
+          "threshold": 0.2785,
+          "precision": 0.2982,
+          "recall": 0.4595
+        },
+        {
+          "threshold": 0.3182,
+          "precision": 0.3182,
+          "recall": 0.3784
+        },
+        {
+          "threshold": 0.3507,
+          "precision": 0.2903,
+          "recall": 0.2432
+        },
+        {
+          "threshold": 0.4325,
+          "precision": 0.2222,
+          "recall": 0.1081
+        },
+        {
+          "threshold": 0.5571,
+          "precision": 0.4,
+          "recall": 0.0541
+        }
+      ]
+    }
+  }
+}

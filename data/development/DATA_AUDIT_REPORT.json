@@ -1,0 +1,86 @@
+{
+  "dataset_file": "data\\development\\rto_feature_table_sample.csv",
+  "row_count": 1000,
+  "column_count": 53,
+  "duplicate_rows": 0,
+  "duplicate_order_ids": 0,
+  "date_range": {
+    "start": "2023-01-01 05:03:04",
+    "end": "2023-01-14 19:00:02"
+  },
+  "target_variable": {
+    "name": "target_rto",
+    "delivered_count_0": 794,
+    "rto_count_1": 206,
+    "rto_prevalence_pct": 20.6,
+    "terminal_outcomes_only": true
+  },
+  "payment_segmentation": {
+    "payment_types": {
+      "COD": 482,
+      "UPI": 307,
+      "Credit_Card": 88,
+      "Debit_Card": 75,
+      "Wallet": 48
+    },
+    "cod_count": 482,
+    "prepaid_count": 518,
+    "cod_rto_rate_pct": 31.33,
+    "prepaid_rto_rate_pct": 10.62
+  },
+  "order_value_stats": {
+    "min": 130.95,
+    "max": 53983.44,
+    "mean": 3805.03,
+    "median": 1279.95,
+    "std": 6697.12
+  },
+  "entity_cardinality": {
+    "unique_customers": 371,
+    "unique_pincodes": 365,
+    "unique_sellers": 150,
+    "first_time_orders": 370
+  },
+  "missing_columns": {
+    "data_period": {
+      "count": 1000,
+      "pct": 100.0
+    },
+    "customer_days_since_last_order": {
+      "count": 370,
+      "pct": 37.0
+    },
+    "customer_prior_cod_share": {
+      "count": 5,
+      "pct": 0.5
+    },
+    "customer_prior_avg_order_value": {
+      "count": 5,
+      "pct": 0.5
+    },
+    "current_vs_customer_avg_value_ratio": {
+      "count": 5,
+      "pct": 0.5
+    },
+    "seller_avg_dispatch_hours_prior_30d": {
+      "count": 22,
+      "pct": 2.2
+    },
+    "seller_dispatch_hours_std_prior_30d": {
+      "count": 22,
+      "pct": 2.2
+    },
+    "category_demand_acceleration": {
+      "count": 8,
+      "pct": 0.8
+    },
+    "category_avg_order_value_prior_30d": {
+      "count": 4,
+      "pct": 0.4
+    }
+  },
+  "leakage_audit": {
+    "prohibited_fields_detected": [],
+    "leakage_safe": true
+  }
+}
